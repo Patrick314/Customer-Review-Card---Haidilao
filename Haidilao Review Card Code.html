@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haidilao Hotpot Review</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .star {
+            font-size: 30px;
+            cursor: pointer;
+        }
+        .hidden {
+            display: none;
+        }
+        .feedback-form, .google-share {
+            margin-top: 20px;
+        }
+        button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+    <script>
+        function handleRating(rating) {
+            document.getElementById('rating-section').classList.add('hidden');
+            if (rating <= 3) {
+                document.getElementById('feedback-form').classList.remove('hidden');
+            } else {
+                document.getElementById('google-share').classList.remove('hidden');
+            }
+        }
+
+        function submitFeedback() {
+            alert('Thank you for your feedback! Our team will follow up with you soon.');
+        }
+
+        function shareOnGoogle() {
+            window.location.href = 'https://www.google.com/maps/place/Haidilao+Hotpot+San+Diego';
+        }
+    </script>
+</head>
+<body>
+    <h1>We'd love to hear how we did!</h1>
+    <div id="rating-section">
+        <p>Please rate your experience:</p>
+        <div class="stars">
+            <span class="star" onclick="handleRating(1)">&#9733;</span>
+            <span class="star" onclick="handleRating(2)">&#9733;</span>
+            <span class="star" onclick="handleRating(3)">&#9733;</span>
+            <span class="star" onclick="handleRating(4)">&#9733;</span>
+            <span class="star" onclick="handleRating(5)">&#9733;</span>
+        </div>
+    </div>
+
+    <div id="feedback-form" class="hidden feedback-form">
+        <h2>We are disappointed to hear this. Let us make it right!</h2>
+        <form onsubmit="submitFeedback(); return false;">
+            <label for="name">Name:</label><br>
+            <input type="text" id="name" name="name" required><br><br>
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" required><br><br>
+            <label for="experience">Tell us about your experience:</label><br>
+            <textarea id="experience" name="experience" rows="5" required></textarea><br><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div id="google-share" class="hidden google-share">
+        <h2>Thank you for your feedback!</h2>
+        <p>Would you like to share your experience online?</p>
+        <button onclick="shareOnGoogle()">Share on Google</button>
+    </div>
+</body>
+</html>
+
