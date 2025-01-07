@@ -81,7 +81,6 @@
                 alert('Thank you for your feedback! Our team will review it.');
             } catch (error) {
                 console.error('Error submitting feedback:', error);
-                alert('There was an issue submitting your feedback. Please try again later.');
             }
 
             document.getElementById('feedback-form').classList.add('hidden');
@@ -107,7 +106,6 @@
     </div>
 
     <div id="feedback-form" class="hidden feedback-form">
-        <h2>We are disappointed to hear this. Let us make it right!</h2>
         <form onsubmit="submitFeedback(); return false;">
             <label for="name">Name:</label><br>
             <input type="text" id="name" name="name" required><br><br>
