@@ -39,6 +39,8 @@
         }
     </style>
     <script>
+        const feedbackDatabase = [];
+
         function handleRating(rating) {
             document.getElementById('rating-section').classList.add('hidden');
             if (rating <= 3) {
@@ -53,11 +55,20 @@
             const phone = document.getElementById('phone').value;
             const experience = document.getElementById('experience').value;
 
-            const emailBody = `Name: ${name}\nPhone: ${phone}\nExperience: ${experience}`;
+            feedbackDatabase.push({
+                name,
+                phone,
+                experience,
+                timestamp: new Date().toISOString()
+            });
 
-            window.location.href = `mailto:patrickcote2004@icloud.com?subject=Customer Feedback&body=${encodeURIComponent(emailBody)}`;
+            console.log('Feedback submitted:', feedbackDatabase);
 
-            alert('Thank you for your feedback! Our team will follow up with you soon.');
+            alert('Thank you for your feedback! Our team will review it.');
+
+            // Reset the form
+            document.getElementById('feedback-form').classList.add('hidden');
+            document.getElementById('rating-section').classList.remove('hidden');
         }
 
         function shareOnGoogle() {
@@ -98,5 +109,4 @@
     </div>
 </body>
 </html>
-
 
