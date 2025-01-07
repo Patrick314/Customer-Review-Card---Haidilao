@@ -49,11 +49,19 @@
         }
 
         function submitFeedback() {
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const experience = document.getElementById('experience').value;
+
+            const emailBody = `Name: ${name}\nPhone: ${phone}\nExperience: ${experience}`;
+
+            window.location.href = `mailto:patrickcote2004@icloud.com?subject=Customer Feedback&body=${encodeURIComponent(emailBody)}`;
+
             alert('Thank you for your feedback! Our team will follow up with you soon.');
         }
 
         function shareOnGoogle() {
-            window.location.href = 'https://www.google.com/maps/place/Haidilao+Hotpot+San+Diego';
+            window.location.href = 'https://www.google.com/search?q=haidlao+hot+pot&oq=haidlao+hot+pot+&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIMCAEQABgKGLEDGIAEMgYIAhBFGEAyEggDEC4YChivARjHARiABBiOBTIPCAQQLhgKGK8BGMcBGIAEMgkIBRAAGAoYgAQyCQgGEAAYChiABDIJCAcQABgKGIAE0gEIMTgyOGowajeoAgCwAgA&sourceid=chrome&ie=UTF-8#lrd=0x80dc0794dbf43439:0xc896169b8cd0c28c,3,,,,';
         }
     </script>
 </head>
@@ -75,8 +83,8 @@
         <form onsubmit="submitFeedback(); return false;">
             <label for="name">Name:</label><br>
             <input type="text" id="name" name="name" required><br><br>
-            <label for="email">Email:</label><br>
-            <input type="email" id="email" name="email" required><br><br>
+            <label for="phone">Phone Number:</label><br>
+            <input type="text" id="phone" name="phone" required><br><br>
             <label for="experience">Tell us about your experience:</label><br>
             <textarea id="experience" name="experience" rows="5" required></textarea><br><br>
             <button type="submit">Submit</button>
