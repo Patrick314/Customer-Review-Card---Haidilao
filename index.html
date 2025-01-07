@@ -38,8 +38,20 @@
             background-color: #d32f2f;
         }
     </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
     <script>
-        const feedbackDatabase = [];
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore(app);
 
         function handleRating(rating) {
             document.getElementById('rating-section').classList.add('hidden');
@@ -50,23 +62,24 @@
             }
         }
 
-        function submitFeedback() {
+        async function submitFeedback() {
             const name = document.getElementById('name').value;
             const phone = document.getElementById('phone').value;
             const experience = document.getElementById('experience').value;
 
-            feedbackDatabase.push({
-                name,
-                phone,
-                experience,
-                timestamp: new Date().toISOString()
-            });
+            try {
+                await db.collection('feedback').add({
+                    name,
+                    phone,
+                    experience,
+                    timestamp: new Date().toISOString()
+                });
+                alert('Thank you for your feedback! Our team will review it.');
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                alert('Failed to submit feedback. Please try again.');
+            }
 
-            console.log('Feedback submitted:', feedbackDatabase);
-
-            alert('Thank you for your feedback! Our team will review it.');
-
-            // Reset the form
             document.getElementById('feedback-form').classList.add('hidden');
             document.getElementById('rating-section').classList.remove('hidden');
         }
@@ -109,4 +122,3 @@
     </div>
 </body>
 </html>
-
