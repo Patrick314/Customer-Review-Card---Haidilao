@@ -60,13 +60,46 @@
         };
 
         async function submitFeedback() {
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
-            const experience = document.getElementById('experience').value;
-            const spinner = document.getElementById('spinner');
+    const name = document.getElementById('name').value;
+    const phone = document.getElementById('phone').value;
+    const experience = document.getElementById('experience').value;
+    const spinner = document.getElementById('spinner');
 
-            // Validate phone number
-            if (!/^[0-9]{10}$/.test(phone)) {
+    // Validate phone number
+    if (!/^[0-9]{10}$/.test(phone)) {
+        alert("Please enter a valid 10-digit phone number.");
+        return;
+    }
+
+    spinner.style.display = 'block';
+    try {
+        console.log("Submitting feedback:", { name, phone, experience }); // Log the feedback being submitted
+        const { data, error } = await supabase.from('feedback').insert([
+            {
+                name: name,
+                phone: phone,
+                experience: experience,
+                timestamp: new Date().toISOString(),
+            },
+        ]);
+
+        console.log("Data inserted:", data); // Log the response from Supabase
+
+        if (error) {
+            console.error("Supabase Error:", error); // Log any errors
+            throw error;
+        }
+
+        alert('Thank you for your feedback! Our team will review it.');
+        document.getElementById('feedback-form').classList.add('hidden');
+        document.getElementById('rating-section').classList.remove('hidden');
+    } catch (error) {
+        console.error('Error submitting feedback:', error);
+        alert('There was an issue submitting your feedback. Please try again later.');
+    } finally {
+        spinner.style.display = 'none';
+    }
+}$/.test(phone)) {
                 alert("Please enter a valid 10-digit phone number.");
                 return;
             }
@@ -136,3 +169,4 @@
     </div>
 </body>
 </html>
+
