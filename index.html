@@ -43,23 +43,12 @@
         }
     </style>
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBrnXr1u41Mxso8caMu7xzsF1vjRhXr4js",
-            authDomain: "haidilao-feedback-32c4a.firebaseapp.com",
-            projectId: "haidilao-feedback-32c4a",
-            storageBucket: "haidilao-feedback-32c4a.appspot.com",
-            messagingSenderId: "430191062369",
-            appId: "1:430191062369:web:207f8ed6984cc41d01e920",
-            measurementId: "G-9SLP84FDKV"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        // Supabase configuration
+        const supabaseUrl = "https://bslwarrzsxokbajezuze.supabase.co"; // Replace with your Supabase URL
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzbHdhcnJ6c3hva2JhamV6dXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYzMTU1OTksImV4cCI6MjA1MTg5MTU5OX0.3cQhIcNd5jFqLees-w-W2LwYfK9gWG2_ErNwwM3IE3c"; // Replace with your Supabase anon public key
+        const supabase = createClient(supabaseUrl, supabaseKey);
 
         window.handleRating = function(rating) {
             document.getElementById('rating-section').classList.add('hidden');
@@ -84,12 +73,19 @@
 
             spinner.style.display = 'block';
             try {
-                await addDoc(collection(db, 'feedback'), {
-                    name,
-                    phone,
-                    experience,
-                    timestamp: new Date().toISOString()
-                });
+                const { data, error } = await supabase.from('feedback').insert([
+                    {
+                        name: name,
+                        phone: phone,
+                        experience: experience,
+                        timestamp: new Date().toISOString(),
+                    },
+                ]);
+
+                if (error) {
+                    throw error;
+                }
+
                 alert('Thank you for your feedback! Our team will review it.');
                 document.getElementById('feedback-form').classList.add('hidden');
                 document.getElementById('rating-section').classList.remove('hidden');
