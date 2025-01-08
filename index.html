@@ -37,24 +37,29 @@
         button:hover {
             background-color: #d32f2f;
         }
+        .spinner {
+            display: none;
+            margin: 20px auto;
+        }
     </style>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
         // Firebase configuration
         const firebaseConfig = {
-          apiKey: "AIzaSyBrnXr1u41Mxso8caMu7xzsF1vjRhXr4js",
-          authDomain: "haidilao-feedback-32c4a.firebaseapp.com",
-          projectId: "haidilao-feedback-32c4a",
-          storageBucket: "haidilao-feedback-32c4a.firebasestorage.app",
-          messagingSenderId: "430191062369",
-          appId: "1:430191062369:web:207f8ed6984cc41d01e920",
-          measurementId: "G-9SLP84FDKV"
+            apiKey: "AIzaSyBrnXr1u41Mxso8caMu7xzsF1vjRhXr4js",
+            authDomain: "haidilao-feedback-32c4a.firebaseapp.com",
+            projectId: "haidilao-feedback-32c4a",
+            storageBucket: "haidilao-feedback-32c4a.appspot.com",
+            messagingSenderId: "430191062369",
+            appId: "1:430191062369:web:207f8ed6984cc41d01e920",
+            measurementId: "G-9SLP84FDKV"
         };
 
         // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore(app);
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
         function handleRating(rating) {
             document.getElementById('rating-section').classList.add('hidden');
@@ -69,22 +74,31 @@
             const name = document.getElementById('name').value;
             const phone = document.getElementById('phone').value;
             const experience = document.getElementById('experience').value;
+            const spinner = document.getElementById('spinner');
 
+            // Validate phone number
+            if (!/^[0-9]{10}$/.test(phone)) {
+                alert("Please enter a valid 10-digit phone number.");
+                return;
+            }
+
+            spinner.style.display = 'block';
             try {
-                await db.collection('feedback').add({
+                await addDoc(collection(db, 'feedback'), {
                     name,
                     phone,
                     experience,
                     timestamp: new Date().toISOString()
                 });
                 alert('Thank you for your feedback! Our team will review it.');
+                document.getElementById('feedback-form').classList.add('hidden');
+                document.getElementById('rating-section').classList.remove('hidden');
             } catch (error) {
                 console.error('Error submitting feedback:', error);
                 alert('There was an issue submitting your feedback. Please try again later.');
+            } finally {
+                spinner.style.display = 'none';
             }
-
-            document.getElementById('feedback-form').classList.add('hidden');
-            document.getElementById('rating-section').classList.remove('hidden');
         }
 
         function shareOnGoogle() {
@@ -96,12 +110,12 @@
     <h1>We'd love to hear how we did!</h1>
     <div id="rating-section">
         <p>Please rate your experience:</p>
-        <div class="stars">
-            <span class="star" onclick="handleRating(1)">&#9733;</span>
-            <span class="star" onclick="handleRating(2)">&#9733;</span>
-            <span class="star" onclick="handleRating(3)">&#9733;</span>
-            <span class="star" onclick="handleRating(4)">&#9733;</span>
-            <span class="star" onclick="handleRating(5)">&#9733;</span>
+        <div class="stars" role="group" aria-label="Rate your experience">
+            <span class="star" aria-label="1 star" onclick="handleRating(1)">&#9733;</span>
+            <span class="star" aria-label="2 stars" onclick="handleRating(2)">&#9733;</span>
+            <span class="star" aria-label="3 stars" onclick="handleRating(3)">&#9733;</span>
+            <span class="star" aria-label="4 stars" onclick="handleRating(4)">&#9733;</span>
+            <span class="star" aria-label="5 stars" onclick="handleRating(5)">&#9733;</span>
         </div>
     </div>
 
@@ -116,6 +130,7 @@
             <textarea id="experience" name="experience" rows="5" required></textarea><br><br>
             <button type="submit">Submit</button>
         </form>
+        <div id="spinner" class="spinner">Submitting...</div>
     </div>
 
     <div id="google-share" class="hidden google-share">
